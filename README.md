@@ -1,2 +1,2 @@
 # Resumidor
- É um algoritimo de machine learning que ira resumir textos. 
+ É um algoritimo de que ira resumir textos. 
