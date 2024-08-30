@@ -1,28 +1,190 @@
-
-
-    
-def pontuação():
+def pontuacao():
+    """Retorna uma string com todos os caracteres de pontuação."""
     return r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
 
 def stopwords():
+    """Retorna uma lista de stop words em português."""
     lista = ['a', 'à', 'ao', 'aos', 'aquela', 'aquelas', 'aquele', 'aqueles', 'aquilo', 'as', 'às', 'até', 'com', 'como', 'da', 'das', 'de', 'dela', 'delas', 'dele', 'deles', 'depois', 'do', 'dos', 'e', 'é', 'ela', 'elas', 'ele', 'eles', 'em', 'entre', 'era', 'eram', 'éramos', 'essa', 'essas', 'esse', 'esses', 'esta', 'está', 'estamos', 'estão', 'estar', 'estas', 'estava', 'estavam', 'estávamos', 'este', 'esteja', 'estejam', 'estejamos', 'estes', 'esteve', 'estive', 'estivemos', 'estiver', 'estivera', 'estiveram', 'estivéramos', 'estiverem', 'estivermos', 'estivesse', 'estivessem', 'estivéssemos', 'estou', 'eu', 'foi', 'fomos', 'for', 'fora', 'foram', 'fôramos', 'forem', 'formos', 'fosse', 'fossem', 'fôssemos', 'fui', 'há', 'haja', 'hajam', 'hajamos', 'hão', 'havemos', 'haver', 'hei', 'houve', 'houvemos', 'houver', 'houvera', 'houverá', 'houveram', 'houvéramos', 'houverão', 'houverei', 'houverem', 'houveremos', 'houveria', 'houveriam', 'houveríamos', 'houvermos', 'houvesse', 'houvessem', 'houvéssemos', 'isso', 'isto', 'já', 'lhe', 'lhes', 'mais', 'mas', 'me', 'mesmo', 'meu', 'meus', 'minha', 'minhas', 'muito', 'na', 'não', 'nas', 'nem', 'no', 'nos', 'nós', 'nossa', 'nossas', 'nosso', 'nossos', 'num', 'numa', 'o', 'os', 'ou', 'para', 'pela', 'pelas', 'pelo', 'pelos', 'por', 'qual', 'quando', 'que', 'quem', 'são', 'se', 'seja', 'sejam', 'sejamos', 'sem', 'ser', 'será', 'serão', 'serei', 'seremos', 'seria', 'seriam', 'seríamos', 'seu', 'seus', 'só', 'somos', 'sou', 'sua', 'suas', 'também', 'te', 'tem', 'tém', 'temos', 'tenha', 'tenham', 'tenhamos', 'tenho', 'terá', 'terão', 'terei', 'teremos', 'teria', 'teriam', 'teríamos', 'teu', 'teus', 'teve', 'tinha', 'tinham', 'tínhamos', 'tive', 'tivemos', 'tiver', 'tivera', 'tiveram', 'tivéramos', 'tiverem', 'tivermos', 'tivesse', 'tivessem', 'tivéssemos', 'tu', 'tua', 'tuas', 'um', 'uma', 'você', 'vocês', 'vos']
     return lista
 
-def separar_frases(texto):
+def obter_frases(text):
+    """Separa um texto em frases, considerando '.', '!' e '?' como delimitadores.
+
+    Args:
+        text (str): O texto a ser dividido em frases.
+
+    Returns:
+        list: Uma lista de frases extraídas do texto.
+    """
     frases = []
     frase_atual = ""
-    for char in texto:
+    for char in text:
         frase_atual += char
-        if char in ".!?":  # Verifica se o caractere é um ponto final, exclamação ou interrogação
+        if char in ".!?":
             frases.append(frase_atual.strip())
             frase_atual = ""
-    if frase_atual:  # Adiciona a última frase caso não tenha terminado em um dos sinais
+    if frase_atual:
         frases.append(frase_atual.strip())
     return frases
 
+def contar_frases_resumo(text):
+    """Define a quantidade de frases no resumo, com base no número total de frases.
+
+    Args:
+        text (str): O texto a ser analisado.
+
+    Returns:
+        int: A quantidade de frases no resumo.
+    """
+    if text.count(". ") > 20:
+        quant_frases_resumo = int(round(text.count(". ") / 10, 0))
+    else:
+        quant_frases_resumo = 1
+    return quant_frases_resumo
+
+def remover_pontuacao(text):
+    """Remove pontuações de um texto e retorna uma string sem pontuação.
+
+    Args:
+        text (str): O texto a ser processado.
+
+    Returns:
+        str: O texto sem pontuação.
+    """
+    caracteres_sem_pontuacao = []
+    for char in text:
+        if char not in pontuacao():
+            caracteres_sem_pontuacao.append(char)
+    texto_sem_pontuacao = "".join(caracteres_sem_pontuacao)
+    return texto_sem_pontuacao
+
+def remover_stopwords(text_sem_pontuacao):
+    """Remove stop words de um texto.
+
+    Args:
+        text_sem_pontuacao (str): O texto sem pontuação.
+
+    Returns:
+        list: Uma lista de palavras sem stop words.
+    """
+    palavras_texto = text_sem_pontuacao.split()
+    texto_processado = []
+    for palavras in palavras_texto:
+        if palavras.lower() not in stopwords():
+            texto_processado.append(palavras)
+    return texto_processado
+
+def frequencia_palavras(text_processado):
+    """Calcula a frequência de cada palavra em um texto.
+
+    Args:
+        text_processado (list): A lista de palavras processadas.
+
+    Returns:
+        dict: Um dicionário com a frequência de cada palavra.
+    """
+    freq_palavras = {}
+    for palavras in text_processado:
+        if palavras not in freq_palavras:
+            freq_palavras[palavras] = 1
+        else:
+            freq_palavras[palavras] += 1
+    return freq_palavras
+
+def frequencia_frases(list_frases, freq_palavras):
+    """Calcula a pontuação de cada frase, com base na frequência das palavras.
+
+    Args:
+        list_frases (list): A lista de frases.
+        freq_palavras (dict): O dicionário com a frequência das palavras.
+
+    Returns:
+        dict: Um dicionário com a pontuação de cada frase.
+    """
+    pontuacao_frases = {}
+    for frases in list_frases:
+        for palavras in frases.lower().split():
+            if palavras in freq_palavras.keys():
+                if frases not in pontuacao_frases.keys():
+                    pontuacao_frases[frases] = freq_palavras[palavras]
+                else:
+                    pontuacao_frases[frases] += freq_palavras[palavras]
+    return pontuacao_frases
+
+def identificar_frases_importantes(pontuacao_frases, quant_frases_resumo):
+    """Identifica as frases mais importantes, com base na pontuação.
+
+    Args:
+        pontuacao_frases (dict): O dicionário com a pontuação de cada frase.
+        quant_frases_resumo (int): A quantidade de frases no resumo.
+
+    Returns:
+        list: Uma lista com as pontuações das frases mais importantes.
+    """
+    chaves = list(pontuacao_frases.values())
+    frases_importantes = []
+    i = 0
+    for i in range(quant_frases_resumo):
+        frases_importantes.append(max(chaves))
+        del chaves[chaves.index(max(chaves))]
+    return frases_importantes
+
+def converter_dicionario_para_lista(pont_frases):
+    """Converte um dicionário de pontuação de frases para uma lista de tuplas.
+
+    Args:
+        pont_frases (dict): O dicionário de pontuação de frases.
+
+    Returns:
+        list: Uma lista de tuplas (frase, pontuação).
+    """
+    pontuacao_frases_lista = []
+    for chave, valor in pont_frases.items():
+        pontuacao_frases_lista.append((chave, valor))
+    return pontuacao_frases_lista
+
+def criar_lista_resumo(pontuacao_frases_lista, tokens_importantes):
+    """Cria uma lista de frases para o resumo.
+
+    Args:
+        pontuacao_frases_lista (list): A lista de tuplas (frase, pontuação).
+        tokens_importantes (list): As pontuações das frases mais importantes.
+
+    Returns:
+        list: A lista de frases para o resumo.
+    """
+    frases_resumo = []
+    for frase_pontuacao in pontuacao_frases_lista:
+        if frase_pontuacao[1] in tokens_importantes:
+            frases_resumo.append(frase_pontuacao[0])
+    return frases_resumo
+
+def gerar_resumo(text):
+    """Gera um resumo do texto utilizando a técnica de extração de frases.
+
+    Args:
+        text (str): O texto a ser resumido.
+
+    Returns:
+        str: O resumo do texto.
+    """
+    quantidade_frases_resumo = contar_frases_resumo(text)
+    texto_sem_pontuacao = remover_pontuacao(text)
+    texto_sem_stopword = remover_stopwords(texto_sem_pontuacao)
+
+    palavras_tokenizadas = frequencia_palavras(texto_sem_stopword)
+    separado_frases = obter_frases(text)
+    frases_tokenizadas = frequencia_frases(separado_frases, palavras_tokenizadas)
+
+    tokens_importantes = identificar_frases_importantes(frases_tokenizadas, quantidade_frases_resumo)
+    pontuacao_frases = converter_dicionario_para_lista(frases_tokenizadas)
+
+    frases_resumo = criar_lista_resumo(pontuacao_frases, tokens_importantes)
+    resumo = ' '.join(frases_resumo)
+    return resumo
+
 
 texto = """Claro! Vou formatar o texto para você, destacando as principais seções e melhorando a legibilidade. Aqui está a versão formatada:
-
 ---
 
 **Prefácio**
@@ -64,73 +226,6 @@ O código limpo honra as profundas raízes do conhecimento sob nossa cultura mai
 Como todo proprietário de uma casa sabe, tal cuidado e constante refinamento jamais acaba. O arquiteto Christopher Alexander – pai dos padrões e das linguagens de padrões – enxerga cada ato do próprio projeto como um conserto pequeno e local. E ele enxerga a habilidade de uma boa estrutura como o único objetivo do arquiteto; pode-se deixar as formas maiores para os padrões e seus aplicativos para os moradores. O
 
 """
-
-# define a quantidade de frazes do resumo.
-if texto.count(". ") > 20: # se tiver tiver mais de 20 frases
-    quant_frases_resumo = int(round(texto.count(". ") / 10, 0)) #divide a quantidade de frases por 10
-else:
-    quant_frases_resumo = 1 # 
-
-# define Remove pontuações e retorna uma lista dos caracteres sem pontuações
-caracteres_sem_pontuacao = []
-for char in texto:
-    if char not in pontuação():  # se o caracter não for uma pontuação
-        caracteres_sem_pontuacao.append(char)        # então adicione a lista  
-texto_sem_pontuacao = "".join(caracteres_sem_pontuacao)
-
-
-# def  Remove as stopwords
-stopwords = stopwords()
-palavras_texto = texto_sem_pontuacao.split() # Divide o texto sem pontuação em palavras
-testo_processado = []
-for palavras in palavras_texto:
-    if palavras.lower() not in stopwords:
-        testo_processado.append(palavras)
-
-
-
-# def  Coloca no dicionario a frequência de que cada palavra aparece.
-frequencia_palavras = {}
-for palavras in testo_processado:
-    if palavras not in frequencia_palavras:
-        frequencia_palavras[palavras] = 1
-    else:
-        frequencia_palavras[palavras] += 1
-
-
-lista_frases = separar_frases(texto)
-
-
-# def somar o ponto das palavras nas frazes e retorna um dicionario com o ponto da fraze na fraze
-pontuacao_frases = {}
-for frases in lista_frases:
-    for palavras in frases.lower().split(): #divide as frases em palavras e converte para minusculo
-        if palavras in frequencia_palavras.keys():
-            if frases not in pontuacao_frases.keys():
-                pontuacao_frases[frases] = frequencia_palavras[palavras]
-            else:
-                pontuacao_frases[frases] += frequencia_palavras[palavras]
-
-pontuacao_frases = {
-    chave: int(valor) for chave, valor in pontuacao_frases.items()
-}
-
-
-chaves = list(pontuacao_frases.values())
-repetido = []
-for i in range(quant_frases_resumo):
-    repetido.append(max(chaves))
-    del chaves[chaves.index(max(chaves))]
-
-
-
-pontuacao_frases_lista = [(chave, valor) for chave, valor in pontuacao_frases.items()]
-
-frases_resumo = []
-for frase_pontuacao in pontuacao_frases_lista:
-    if frase_pontuacao[1] in repetido:
-        frases_resumo.append(frase_pontuacao[0])
-
-resumo = ' '.join(frases_resumo)
+  
+resumo = gerar_resumo(texto)
 print(resumo)
-
