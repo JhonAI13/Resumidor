@@ -36,8 +36,9 @@ def contar_frases_resumo(text):
     Returns:
         int: A quantidade de frases no resumo.
     """
-    if text.count(". ") > 20:
-        quant_frases_resumo = int(round(text.count(". ") / 10, 0))
+    
+    if text.count(". ") > 10:
+        quant_frases_resumo = int(round(text.count(". ") / 5, 0))
     else:
         quant_frases_resumo = 1
     return quant_frases_resumo
@@ -184,10 +185,8 @@ def gerar_resumo(text):
     return resumo
 
 
-texto = """Pareto 80/20
-Imagine que você tem uma caixa cheia de moedas de diferentes valores. Você percebe que 80% do valor total da caixa vem de apenas 20% das moedas - aquelas de maior valor. Essa observação, aparentemente simples, ilustra o princípio da regra de Pareto, um conceito poderoso que transcende a contagem de moedas e se aplica a inúmeras áreas da vida, desde negócios e economia até a organização pessoal. Em essência, a regra de Pareto, também conhecida como o princípio 80/20, afirma que, em muitos cenários, aproximadamente 80% dos efeitos provêm de 20% das causas.
-Embora não seja uma lei matemática exata, a regra de Pareto serve como um guia poderoso para identificar os fatores mais influentes em qualquer sistema. No mundo empresarial, por exemplo, ela sugere que 80% da receita de uma empresa pode vir de 20% de seus clientes, ou que 80% dos problemas de qualidade em um processo produtivo podem ser atribuídos a 20% das causas. Essa compreensão direciona os esforços para maximizar a eficiência e o impacto. Em vez de distribuir recursos igualmente, a regra de Pareto nos encoraja a focar nossos esforços nos 20% que realmente fazem a diferença.
-Aplicando essa lógica na gestão de tempo, podemos identificar as 20% das tarefas que geram 80% dos resultados desejáveis e priorizá-las, delegando ou otimizando as demais. A beleza da regra de Pareto reside em sua simplicidade e versatilidade. Ela nos convida a questionar a distribuição tradicional de causa e efeito, revelando desequilíbrios muitas vezes ocultos. Ao invés de tratarmos todos os elementos de um sistema como igualmente importantes, a regra de Pareto nos equipa com a sabedoria de identificar os "poucos vitais", aqueles que realmente impulsionam os resultados, permitindo-nos otimizar nossos esforços e alcançar maior impacto em todas as áreas da vida.
+texto = """O que é Python?
+Python é uma linguagem de programação de alto nível, interpretada e de tipagem dinâmica, projetada para enfatizar o esforço do programador. A linguagem, lançada por Guido van Rossum em 1991, destaca a importância da eficiência do programador sobre a do computador. Sua sintaxe é simples, clara e legível, tornando-a uma excelente linguagem de programação para iniciantes. A tipagem dinâmica e o alto nível de abstração são características essenciais da linguagem.
 """
   
 resumo = gerar_resumo(texto)
